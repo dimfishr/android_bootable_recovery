@@ -48,6 +48,7 @@
 #ifdef USE_EXT4
 #include "make_ext4fs.h"
 #endif
+#include "libcrecovery/common.h"
 
 // mount(fs_type, partition_type, location, mount_point)
 //
@@ -274,6 +275,17 @@ Value* FormatFn(const char* name, State* state, int argc, Expr* argv[]) {
         }
         result = location;
 #endif
+    } else if (strcmp(fs_type, "f2fs") == 0) {
+        char cmd[256];
+        sprintf(cmd, "/sbin/mkfs.f2fs %s", location);
+        int status = __system(cmd);
+        if (status != 0) {
+            printf("%s: mkfs.f2fs failed (%d) on %s",
+                    name, status, location);
+            result = strdup("");
+            goto done;
+        }
+        result = location;
     } else {
         printf("%s: unsupported fs_type \"%s\" partition_type \"%s\"",
                 name, fs_type, partition_type);
