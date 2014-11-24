@@ -24,6 +24,8 @@ else
     endif
 endif
 
+PROJECT_PATH_AGREES := true
+
 ifeq ($(PROJECT_PATH_AGREES),true)
 
 include $(CLEAR_VARS)
